@@ -4,7 +4,7 @@
     io = require("socket.io-client"),
     config = require("./config/" + env + ".json"),
     address = require('address'),
-    mifareUltralight = require('./lib/mifare-ultralight');
+    //mifareUltralight = require('./lib/mifare-ultralight');
 
   var socket = io(config.socket.master + config.socket.namespace),
     mac = null,
