@@ -1,5 +1,6 @@
 {
-  "interval": 10,
+  "interval": 4,
+  "same_tag_ignore_duration": 4,
   "socket": {
     "master": "http://10.10.200.140:8000",
     "namespace": "/devices"

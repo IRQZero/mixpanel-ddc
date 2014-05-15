@@ -14,7 +14,7 @@
     location = null;
     last_id = null;
     last_id_timestamp = null;
-    debounce_duration = 60,
+    debounce_duration = config.same_tag_ignore_duration,
     oscServer = null,
     plinthClient = null,
     nodeClient = null,
