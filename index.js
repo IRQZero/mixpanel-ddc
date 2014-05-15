@@ -137,15 +137,25 @@
       startReader(config.nfc.interval);
       socket.on('read:result', function(data){
         location = data.location;
+        if (data.plinth && !plinthControl) {
+          console.log("Generating plinth led control");
+          startPlinthControl();
+        }
+        if (data.node && !nodeControl) {
+          console.log("Generating node led control");
+          startNodeControl();
+        }
       });
       socket.on('update:result', function(data){
         if (data.id === mac && data.location) {
           location = data.location;
         }
         if (data.plinth && !plinthControl) {
+          console.log("Generating plinth led control");
           startPlinthControl();
         }
         if (data.node && !nodeControl) {
+          console.log("Generating node led control");
           startNodeControl();
         }
       });
