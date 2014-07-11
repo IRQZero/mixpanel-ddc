@@ -5,7 +5,8 @@
  */
 
 /* 
-    1. connect to mongodb if not connected
+    0. broadcast identity via mdns
+    1. connect to db if not connected
       1.a. change lights according to state
     2. connect to central socket.io server if not connected
       2.a. change lights according to state
@@ -18,6 +19,10 @@
  */
 
 var io = require('socket.io')();
+var mdns = require('mdns');
+
+mdns.createAdvertisement(mdns.udp('ddc') , app.address().port ).start();
+
 io.sockets.emit('an event sent to all connected clients');
 io.emit('an event sent to all connected clients');
 

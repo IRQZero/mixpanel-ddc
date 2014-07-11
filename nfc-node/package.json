@@ -1,11 +1,11 @@
 {
-  "name": "mixpanel",
+  "name": "mixpanel-ddc-nfc-node",
   "version": "0.0.0",
-  "description": "network services for DDC",
+  "description": "remote nfc reporting node",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "IRQ Zero",
-  "license": "BSD-2-Clause"
+  "license": "No Commercial Reuse as per contract with Mixpanel"
 }
