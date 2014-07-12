@@ -21,7 +21,7 @@
 var io = require('socket.io')();
 var mdns = require('mdns');
 
-mdns.createAdvertisement(mdns.udp('ddc') , app.address().port ).start();
+mdns.createAdvertisement(mdns.udp('ddc') , 7777 ).start();
 
 io.sockets.emit('an event sent to all connected clients');
 io.emit('an event sent to all connected clients');
