@@ -5,8 +5,9 @@
   "main": "index.js",
   "dependencies": {
   	"mdns": "2.2.0",
-  	"socket.io": "1.0.6"
-  	},
+  	"socket.io": "1.0.6",
+   "ndef": "*"
+},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./index.js"
