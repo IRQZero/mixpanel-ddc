@@ -15,13 +15,17 @@
     last_id = null;
     last_id_timestamp = null;
     debounce_duration = 5,
-    oscServer = new osc.Server(3333, '10.0.1.200'),
-    client = new opc('localhost', 7890),
+    oscServer = null,
+    client = new opc(config.opc.host, config.opc.port),
     pixelControl = new HexPlinth({
       server: oscServer,
       client: client,
       config: config
     });
+
+  if (config.osc.enabled) {
+    oscServer = new osc.Server(config.osc.port, config.osc.host);
+  }
 
   pixelControl.draw();
 
