@@ -24,13 +24,14 @@
       oscServer = new osc.Server(config.osc.port, config.osc.host);
     }
     client = new opc(config.opc.host, config.opc.port);
-    pixelControl.draw();
     pixelControl = new HexPlinth({
       server: oscServer,
       client: client,
       config: config
     });
+    pixelControl.draw();
   } catch(ex) {
+    console.error(ex.message);
     console.error("HexPlinth failed to generate an OPC client. STUBBING fadeTo for socket testing");
     pixelControl = {
       fadeTo: function(color) {
