@@ -9,6 +9,9 @@
   var socket = io(config.socket.master + config.socket.namespace),
     mac = null,
     location = null;
+    last_id = null;
+    last_id_timestamp = null;
+    debounce_duration = 5;
 
   function startReader(interval) {
     mifareUltralight.read(function (error, stdout, stderr) {
@@ -16,10 +19,17 @@
           console.log('node error: ' + error);
         }
         var id = stdout.replace('\n','');
+        var id_timestamp = Date.now() / 1000;
         if(id) {
           if(id.length === 14) {
-            console.log('reading: ' + id);
-            socket.emit("create", {userId: id, macAddress: mac, location: location});
+            if(id === last_id && (last_id_timestamp) && ((id_timestamp - last_id_timestamp) < debounce_duration)) {
+              console.log('same tag detected: ignoring ' + id)
+            } else {
+              console.log('read tag with id: ' + id);
+              last_id = id;
+              last_id_timestamp = id_timestamp;
+              socket.emit("create", {userId: id, macAddress: mac, location: location});
+            }
           } else { 
             console.log('received malformed tag: ' + id); 
           }
