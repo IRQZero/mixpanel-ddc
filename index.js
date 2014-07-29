@@ -16,18 +16,28 @@
     last_id_timestamp = null;
     debounce_duration = 5,
     oscServer = null,
-    client = new opc(config.opc.host, config.opc.port),
+    client = null,
+    pixelControl = null;
+
+  try {
+    if (config.osc.enabled) {
+      oscServer = new osc.Server(config.osc.port, config.osc.host);
+    }
+    client = new opc(config.opc.host, config.opc.port);
+    pixelControl.draw();
     pixelControl = new HexPlinth({
       server: oscServer,
       client: client,
       config: config
     });
-
-  if (config.osc.enabled) {
-    oscServer = new osc.Server(config.osc.port, config.osc.host);
+  } catch(ex) {
+    console.error("HexPlinth failed to generate an OPC client. STUBBING fadeTo for socket testing");
+    pixelControl = {
+      fadeTo: function(color) {
+        console.log("fadeTo call received with " + color);
+      }
+    }
   }
-
-  pixelControl.draw();
 
   function startReader(interval) {
     mifareUltralight.read(function (error, stdout, stderr) {
