@@ -30,6 +30,12 @@
       config: config
     });
     pixelControl.draw();
+    ["Blue", "Green", "Orange", "Magenta", "Purple"].forEach(function(color, idx){
+      setTimeout(function(){
+        pixelControl.fadeToColor(color);
+      }, 3000 * idx);
+    })
+
   } catch(ex) {
     console.error(ex.message);
     console.error("HexPlinth failed to generate an OPC client. STUBBING fadeTo for socket testing");
