@@ -102,7 +102,8 @@
           fadeToUser(data.user, function(){
             fadeToTeam(data.team);
           });
-        } else (data.team) {
+        } else if (data.team) {
+          fadeToTeam(data.team);
         }
       })
       socket.emit('read', {macAddress: mac})
