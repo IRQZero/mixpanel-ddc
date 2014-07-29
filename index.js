@@ -76,6 +76,15 @@
     });
   }
 
+  function fadeToTeam(team) {
+    pixelControl.fadeToColor(team);
+  }
+
+  function fadeToUser(user, cb) {
+    pixelControl.fadeToColor(user);
+    setTimeout(cb, 5000);
+  }
+
   address.mac(function(err, address){
     mac = address;
     socket.on('connect', function(){
@@ -89,8 +98,11 @@
         }
       });
       socket.on('team:result', function(data){
-        if (data.name) {
-          pixelControl.fadeToColor(data.name);
+        if (data.user && data.macAddress === mac) {
+          fadeToUser(data.user, function(){
+            fadeToTeam(data.team);
+          });
+        } else (data.team) {
         }
       })
       socket.emit('read', {macAddress: mac})
