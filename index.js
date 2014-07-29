@@ -6,7 +6,7 @@
     address = require('address'),
     mifareUltralight = require('./lib/mifare-ultralight'),
     osc = require('node-osc'),
-    opc = new require('./lib/opc'),
+    opc = require('./lib/opc'),
     HexPlinth = require('./lib/OSC-hex-plinth');
 
   var socket = io(config.socket.master + config.socket.namespace),
