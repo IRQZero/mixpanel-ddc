@@ -4,6 +4,7 @@
   "dependencies": {
     "socket.io": "^1.0.6",
     "socket.io-client": "^1.0.6",
-    "address": "0.0.3"
+    "address": "0.0.3",
+    "node-osc": "^0.2.1"
   }
 }

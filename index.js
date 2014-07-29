@@ -4,39 +4,53 @@
     io = require("socket.io-client"),
     config = require("./config/" + env + ".json"),
     address = require('address'),
-    mifareUltralight = require('./lib/mifare-ultralight');
+    mifareUltralight = require('./lib/mifare-ultralight'),
+    osc = require('node-osc'),
+    opc = new require('./lib/opc'),
+    HexPlinth = require('./lib/OSC-hex-plinth');
 
   var socket = io(config.socket.master + config.socket.namespace),
     mac = null,
     location = null;
     last_id = null;
     last_id_timestamp = null;
-    debounce_duration = 5;
+    debounce_duration = 5,
+    oscServer = new osc.Server(3333, '10.0.1.200'),
+    client = new opc('localhost', 7890),
+    pixelControl = new HexPlinth({
+      server: oscServer,
+      client: client,
+      config: config
+    });
+
+  pixelControl.draw();
 
   function startReader(interval) {
     mifareUltralight.read(function (error, stdout, stderr) {
-        if(error !== null) {
-          console.log('node error: ' + error);
-        }
-        var id = stdout.replace('\n','');
-        var id_timestamp = Date.now() / 1000;
-        if(id) {
-          if(id.length === 14) {
-            if(id === last_id && (last_id_timestamp) && ((id_timestamp - last_id_timestamp) < debounce_duration)) {
-              console.log('same tag detected: ignoring ' + id)
-            } else {
-              console.log('read tag with id: ' + id);
-              last_id = id;
-              last_id_timestamp = id_timestamp;
-              socket.emit("create", {userId: id, macAddress: mac, location: location});
-            }
-          } else { 
-            console.log('received malformed tag: ' + id); 
+      if(error !== null) {
+        console.log('node error: ' + error);
+      }
+
+      var id = stdout.replace('\n','');
+      var id_timestamp = Date.now() / 1000;
+
+      if(id) {
+        if(id.length === 14) {
+          if(id === last_id && (last_id_timestamp) && ((id_timestamp - last_id_timestamp) < debounce_duration)) {
+            console.log('same tag detected: ignoring ' + id)
+          } else {
+            console.log('read tag with id: ' + id);
+            last_id = id;
+            last_id_timestamp = id_timestamp;
+            socket.emit("create", {userId: id, macAddress: mac, location: location});
           }
+        } else {
+          console.log('received malformed tag: ' + id);
         }
-        if (stderr.replace('\n','')) {
-          console.log('exec error: ' + stderr);
-        }
+      }
+      if (stderr.replace('\n','')) {
+        console.log('exec error: ' + stderr);
+      }
       setTimeout(startReader, interval, interval);
     });
   }
@@ -53,6 +67,11 @@
           location = data.location;
         }
       });
+      socket.on('team:result', function(data){
+        if (data.name) {
+          pixelControl.fadeToColor(data.name);
+        }
+      })
       socket.emit('read', {macAddress: mac})
     });
   });
