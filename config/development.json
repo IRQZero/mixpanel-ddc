@@ -1,9 +1,9 @@
 {
   "socket": {
-    "master": "http://localhost:8000",
+    "master": "http://192.168.1.120:8000",
     "namespace": "/devices"
   },
   "nfc": {
-    "interval": 30
+    "interval": 800
   }
 }

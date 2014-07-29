@@ -11,8 +11,22 @@
     location = null;
 
   function startReader(interval) {
-    mifareUltralight.read(function(err, data){
-      console.log(data);
+    mifareUltralight.read(function (error, stdout, stderr) {
+        if(error !== null) {
+          console.log('node error: ' + error);
+        }
+        var id = stdout.replace('\n','');
+        if(id) {
+          if(id.length === 14) {
+            console.log('reading: ' + id);
+            socket.emit("create", {userId: id, macAddress: mac, location: location});
+          } else { 
+            console.log('received malformed tag: ' + id); 
+          }
+        }
+        if (stderr.replace('\n','')) {
+          console.log('exec error: ' + stderr);
+        }
       setTimeout(startReader, interval, interval);
     });
   }
@@ -32,6 +46,5 @@
       socket.emit('read', {macAddress: mac})
     });
   });
-
 
 })();
