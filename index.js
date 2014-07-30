@@ -82,7 +82,7 @@
       }
 
       var id = stdout.split('\n').map(function(id){
-        return id.replace(/.*(\d{14}).*/ig, '$1');
+        return id.replace(/.*(\w{14}).*/ig, '$1');
       }).shift();
       var id_timestamp = Date.now() / 1000;
 
