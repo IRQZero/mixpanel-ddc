@@ -165,11 +165,7 @@
       socket.on('team:result', function(data){
         if (data.user && data.macAddress === mac) {
           console.log(data);
-          fadeToUser(data.user, (function(team){
-            return function(){
-              fadeToTeam(team);
-            }
-          })(data.team));
+          fadeToTeam(data.user);
         } else if (data.team) {
           fadeToTeam(data.team);
         }
