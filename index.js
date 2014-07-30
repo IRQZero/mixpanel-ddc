@@ -141,10 +141,10 @@
         if (data.id === mac && data.location) {
           location = data.location;
         }
-        if (data.plinth) {
+        if (data.plinth && !plinthControl) {
           startPlinthControl();
         }
-        if (data.node) {
+        if (data.node && !nodeControl) {
           startNodeControl();
         }
       });
@@ -160,7 +160,34 @@
           fadeToTeam(data.team);
         }
       });
-      socket.emit('read', {macAddress: mac})
+
+      socket.on('stop', function(){
+        if (plinthControl) {
+          plinthControl.stop();
+        }
+        if (nodeControl) {
+          nodeControl.stop();
+        }
+      });
+
+      socket.on('start', function(data){
+        if (data.plinth) {
+          if (!plinthControl){
+            startPlinthControl();
+          } else {
+            plinthControl.draw();
+          }
+        }
+        if (data.node) {
+          if (!nodeControl) {
+            startNodeControl();
+          } else {
+            nodeControl.draw();
+          }
+        }        
+      });
+
+      socket.emit('read', {macAddress: mac});
     });
     socket.on('disconnect', function(){
       startReconnect();
