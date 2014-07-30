@@ -17,7 +17,8 @@
     debounce_duration = 5,
     oscServer = null,
     client = null,
-    pixelControl = null;
+    pixelControl = null,
+    reconnect;
 
   try {
     if (config.osc.enabled) {
@@ -85,9 +86,16 @@
     setTimeout(cb, 5000);
   }
 
+  function startReconnect () {
+    socket.io.reconnect();
+    reconnect = setTimeout(startReconnect, 2000);
+  }
+
   address.mac(function(err, address){
+
     mac = address;
     socket.on('connect', function(){
+      clearTimeout(reconnect);
       startReader(config.nfc.interval);
       socket.on('read:result', function(data){
         location = data.location;
@@ -107,6 +115,9 @@
         }
       })
       socket.emit('read', {macAddress: mac})
+    });
+    socket.on('disconnect', function(){
+      startReconnect();
     });
   });
 
