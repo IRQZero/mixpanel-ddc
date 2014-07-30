@@ -18,7 +18,7 @@
     oscServer = null,
     client = null,
     pixelControl = null,
-    reconnect;
+    reconnect = 0;
 
   try {
     if (config.osc.enabled) {
