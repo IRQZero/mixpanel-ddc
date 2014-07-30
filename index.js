@@ -16,24 +16,39 @@
     last_id_timestamp = null;
     debounce_duration = 5,
     oscServer = null,
-    client = null,
-    pixelControl = null,
+    plinthClient = null,
+    nodeClient = null,
+    plinthControl = null,
+    nodeControl = null,
     reconnect = 0;
 
   try {
     if (config.osc.enabled) {
       oscServer = new osc.Server(config.osc.port, config.osc.host);
     }
-    client = new opc(config.opc.host, config.opc.port);
-    pixelControl = new HexPlinth({
+    plinthClient = new opc(config.opc.host, config.opc.port);
+    nodeClient = new opc(config.opc.host, config.opc.port);
+
+    plinthControl = new HexPlinth({
       server: oscServer,
-      client: client,
-      config: config
+      client: plinthClient,
+      config: config,
+      length: 113
     });
-    pixelControl.draw();
+
+    nodeControl = new HexPlinth({
+      server: oscServer,
+      client: nodeClient,
+      config: config,
+      length: 24
+    });
+
+    plinthControl.draw();
+    nodeControl.draw();
     ["Blue", "Green", "Orange", "Magenta", "Purple"].forEach(function(color, idx){
       setTimeout(function(){
-        pixelControl.fadeToColor(color);
+        plinthControl.fadeToColor(color);
+        nodeControl.fadeToColor(color);
       }, 3000 * idx);
     })
 
