@@ -107,9 +107,12 @@
       });
       socket.on('team:result', function(data){
         if (data.user && data.macAddress === mac) {
-          fadeToUser(data.user, function(){
-            fadeToTeam(data.team);
-          });
+          console.log(data);
+          fadeToUser(data.user, (function(team){
+            return function(){
+              fadeToTeam(team);
+            }
+          })(data.team));
         } else if (data.team) {
           fadeToTeam(data.team);
         }
