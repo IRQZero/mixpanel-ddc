@@ -22,44 +22,56 @@
     nodeControl = null,
     reconnect = 0;
 
-  try {
+  function getOscServer(){
+    if (oscServer) {
+      // singleton
+      return oscServer;
+    }
     if (config.osc.enabled) {
       oscServer = new osc.Server(config.osc.port, config.osc.host);
     }
-    plinthClient = new opc(config.opc.host, config.opc.port);
-    nodeClient = new opc(config.opc.host, config.opc.port);
+  }
 
-    plinthControl = new HexPlinth({
-      server: oscServer,
-      client: plinthClient,
-      config: config,
-      length: 113
-    });
-
-    nodeControl = new HexPlinth({
-      server: oscServer,
-      client: nodeClient,
-      config: config,
-      length: 24
-    });
-
-    plinthControl.draw();
-    nodeControl.draw();
+  function controlTest(control) {
     ["Blue", "Green", "Orange", "Magenta", "Purple"].forEach(function(color, idx){
       setTimeout(function(){
-        plinthControl.fadeToColor(color);
-        nodeControl.fadeToColor(color);
+        control.fadeToColor(color);
       }, 3000 * idx);
     })
+  }
 
-  } catch(ex) {
-    console.error(ex.message);
-    console.error("HexPlinth failed to generate an OPC client. STUBBING fadeTo for socket testing");
-    pixelControl = {
-      fadeTo: function(color) {
-        console.log("fadeTo call received with " + color);
-      }
+  function startPlinthControl() {
+    try {
+      plinthClient = new opc(config.opc.host, config.opc.port);
+      plinthControl = new HexPlinth({
+        server: getOscServer(),
+        client: plinthClient,
+        config: config,
+        length: 113
+      });
+      plinthControl.draw();
+      controlTest(plinthControl);
+    } catch(ex) {
+      console.error('Error :: ' + ex.message);
     }
+
+  }
+
+  function startNodeControl(){
+    try {
+      nodeClient = new opc(config.opc.host, config.opc.port);
+      nodeControl = new HexPlinth({
+        server: getOscServer(),
+        client: nodeClient,
+        config: config,
+        length: 24
+      });
+      nodeControl.draw();
+      controlTest(nodeControl);
+    } catch (ex) {
+      console.error('Error :: ' + ex.message);
+    }
+
   }
 
   function startReader(interval) {
@@ -93,11 +105,21 @@
   }
 
   function fadeToTeam(team) {
-    pixelControl.fadeToColor(team);
+    if (plinthControl) {
+      plinthControl.fadeToColor(team);
+    }
+    if (nodeControl) {
+      nodeControl.fadeToColor(team);
+    }
   }
 
   function fadeToUser(user, cb) {
-    pixelControl.fadeToColor(user);
+    if (plinthControl) {
+      plinthControl.fadeToColor(user);
+    }
+    if (nodeControl) {
+      nodeControl.fadeToColor(user);
+    }
     setTimeout(cb, 5000);
   }
 
@@ -119,6 +141,12 @@
         if (data.id === mac && data.location) {
           location = data.location;
         }
+        if (data.plinth) {
+          startPlinthControl();
+        }
+        if (data.node) {
+          startNodeControl();
+        }
       });
       socket.on('team:result', function(data){
         if (data.user && data.macAddress === mac) {
@@ -131,7 +159,7 @@
         } else if (data.team) {
           fadeToTeam(data.team);
         }
-      })
+      });
       socket.emit('read', {macAddress: mac})
     });
     socket.on('disconnect', function(){
