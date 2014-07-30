@@ -5,7 +5,7 @@
     "namespace": "/devices"
   },
   "nfc": {
-    "interval": 800
+    "interval": 500
   },
   "osc": {
     "enabled": true,
