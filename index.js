@@ -14,7 +14,7 @@
     location = null;
     last_id = null;
     last_id_timestamp = null;
-    debounce_duration = 5,
+    debounce_duration = 60,
     oscServer = null,
     plinthClient = null,
     nodeClient = null,
