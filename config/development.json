@@ -1,7 +1,7 @@
 {
   "interval": 10,
   "socket": {
-    "master": "http://10.10.200.32:8000",
+    "master": "http://10.10.200.140:8000",
     "namespace": "/devices"
   },
   "nfc": {
