@@ -81,7 +81,9 @@
         console.log('node error: ' + error);
       }
 
-      var id = stdout.replace('\n','');
+      var id = stdout.split('\n').map(function(id){
+        return id.replace(/.*(\d{14}).*/ig, '$1');
+      }).shift();
       var id_timestamp = Date.now() / 1000;
 
       if(id) {
@@ -101,6 +103,7 @@
       if (stderr.replace('\n','')) {
         console.log('exec error: ' + stderr);
       }
+
       setTimeout(startReader, interval, interval);
     });
   }
