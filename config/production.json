@@ -1,0 +1,19 @@
+{
+  "interval": 10,
+  "socket": {
+    "master": "http://10.10.200.140:8000",
+    "namespace": "/devices"
+  },
+  "nfc": {
+    "interval": 800
+  },
+  "osc": {
+    "enabled": false,
+    "host": "10.0.1.200",
+    "port": 3333
+  },
+  "opc": {
+    "host": "localhost",
+    "port": 7890
+  }
+}
