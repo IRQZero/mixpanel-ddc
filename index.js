@@ -29,6 +29,7 @@
     }
     if (config.osc.enabled) {
       oscServer = new osc.Server(config.osc.port, config.osc.host);
+      return oscServer;
     }
   }
 
@@ -184,7 +185,7 @@
           } else {
             nodeControl.draw();
           }
-        }        
+        }
       });
 
       socket.emit('read', {macAddress: mac});
