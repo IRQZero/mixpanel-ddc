@@ -1,2 +1,2 @@
 * * * * * root /srv/mixpanel-ddc/clear_logs.sh
-*/5 * * * * root /srv/mixpanel-ddc/restart_full.sh
+* * * * * root /srv/mixpanel-ddc/restart_full.sh
