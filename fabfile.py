@@ -3,23 +3,36 @@ env.user = 'root'
 env.password = ''
 
 env.roledefs = {
+    'plinths': [
+        'reader0',
+        'reader1',
+        'reader2',
+        'reader4',
+        'reader5',
+    ],
     'readers': [
-        '10.10.200.150',
-        '10.10.200.151',
-        '10.10.200.152',
-        '10.10.200.154',
+        'reader14',
     ]
 }
 
-def start_leds():
-    with cd('/root/LEDscape/'):
-        # so ghetto but does not work without the sleep
-        run('screen -d -m ./opc-server -1 NOP -c 24 -s 24; sleep 1')
+def restart_plinth_leds():
+    with cd('/root/LEDscape'):
+        with settings(warn_only=True):
+            run('screen -S led -p 0 -X quit')
+        run('screen -S led -d -m ./opc-server -1 NOP -c 113 -s 24; sleep 1')
 
-def start_reader_server():
+def restart_leds():
+    with cd('/root/LEDscape/'):
+        with settings(warn_only=True):
+            run('screen -S led -p 0 -X quit')
+        run('screen -S led -d -m ./opc-server -1 NOP -c 24 -s 24; sleep 1')
+
+def restart_reader_server():
     with cd('/srv/mixpanel-ddc'):
         # so ghetto but does not work without the sleep
-        run('screen -d -m node index.js; sleep 1')
+        with settings(warn_only=True):
+            run('screen -S reader_server -p 0 -X quit')
+        run('screen -S reader_server -d -m node index.js; sleep 1')
 
 def update_crontab():
     # should really only have to do this once.. but if we update it,
