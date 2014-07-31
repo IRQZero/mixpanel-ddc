@@ -77,31 +77,35 @@
 
   function startReader(interval) {
     mifareUltralight.read(function (error, stdout, stderr) {
-      if(error !== null) {
-        console.log('node error: ' + error);
-      }
-
-      var id = stdout.split('\n').map(function(id){
-        return id.replace(/.*(\w{14}).*/ig, '$1');
-      }).shift();
-      var id_timestamp = Date.now() / 1000;
-
-      if(id) {
-        if(id.length === 14) {
-          if(id === last_id && (last_id_timestamp) && ((id_timestamp - last_id_timestamp) < debounce_duration)) {
-            console.log('same tag detected: ignoring ' + id)
-          } else {
-            console.log('read tag with id: ' + id);
-            last_id = id;
-            last_id_timestamp = id_timestamp;
-            socket.emit("create", {userId: id, macAddress: mac, location: location});
+      try {
+          if(error !== null) {
+            console.log('node error: ' + error);
           }
-        } else {
-          console.log('received malformed tag: ' + id);
-        }
-      }
-      if (stderr.replace('\n','')) {
-        console.log('exec error: ' + stderr);
+
+          var id = stdout.split('\n').map(function(id){
+            return id.replace(/.*(\w{14}).*/ig, '$1');
+          }).shift();
+          var id_timestamp = Date.now() / 1000;
+
+          if(id) {
+            if(id.length === 14) {
+              if(id === last_id && (last_id_timestamp) && ((id_timestamp - last_id_timestamp) < debounce_duration)) {
+                console.log('same tag detected: ignoring ' + id)
+              } else {
+                console.log('read tag with id: ' + id);
+                last_id = id;
+                last_id_timestamp = id_timestamp;
+                socket.emit("create", {userId: id, macAddress: mac, location: location});
+              }
+            } else {
+              console.log('received malformed tag: ' + id);
+            }
+          }
+          if (stderr.replace('\n','')) {
+            console.log('exec error: ' + stderr);
+          }
+      } catch(e) {
+          console.error("UNCAUGHT EXCEPTION: " + e);
       }
 
       setTimeout(startReader, interval, interval);
