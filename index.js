@@ -143,8 +143,7 @@
         if (data.plinth && !plinthControl) {
           console.log("Generating plinth led control");
           startPlinthControl();
-        }
-        if (data.node && !nodeControl) {
+        } else if (data.node && !nodeControl) {
           console.log("Generating node led control");
           startNodeControl();
         }
@@ -156,8 +155,7 @@
         if (data.plinth && !plinthControl) {
           console.log("Generating plinth led control");
           startPlinthControl();
-        }
-        if (data.node && !nodeControl) {
+        } else if (data.node && !nodeControl) {
           console.log("Generating node led control");
           startNodeControl();
         }
