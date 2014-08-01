@@ -25,6 +25,8 @@ env.roledefs = {
     ]
 }
 
+env.roledefs['all'] = env.roledefs['readers'] + env.roledefs['plinths']
+
 def stop_leds():
     with settings(warn_only=True):
         run('screen -S led -p 0 -X quit')
