@@ -78,6 +78,7 @@
   function startReader(interval) {
     mifareUltralight.read(function (error, stdout, stderr) {
       try {
+          console.log('LOG: read received');
           if(error !== null) {
             console.log('node error: ' + error);
           }
@@ -140,6 +141,7 @@
 
     mac = address;
     socket.on('connect', function(){
+      console.log('LOG: connecting to socket');
       clearTimeout(reconnect);
       startReader(config.nfc.interval);
       socket.on('read:result', function(data){
@@ -174,6 +176,7 @@
       });
 
       socket.on('stop', function(){
+        console.log('LOG: stopping the socket');
         if (plinthControl) {
           plinthControl.stop();
         }
@@ -183,6 +186,7 @@
       });
 
       socket.on('start', function(data){
+        console.log('LOG: starting the socket');
         if (data.plinth) {
           if (!plinthControl){
             startPlinthControl();
@@ -202,6 +206,7 @@
       socket.emit('read', {macAddress: mac});
     });
     socket.on('disconnect', function(){
+      console.log('LOG: disconnected');
       startReconnect();
     });
   });
