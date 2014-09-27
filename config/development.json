@@ -6,7 +6,8 @@
     "namespace": "/devices"
   },
   "nfc": {
-    "interval": 500
+    "reader_poll_interval": 10,
+    "duplicate_ignore_delay": 4
   },
   "osc": {
     "enabled": true,

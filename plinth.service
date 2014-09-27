@@ -1,0 +1,10 @@
+[Unit]
+Description=LEDScape UDP Receiver
+
+[Service]
+WorkingDirectory=/srv/mixpanel-ddc/
+ExecStart=/srv/mixpanel-ddc/run-plinth
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
